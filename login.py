@@ -40,8 +40,8 @@ class gui():
 
                         mycursor.execute(userPassInsert)
                         db.commit()
-                        Label(self.main, text="Registration Success, please continue to Login.", fg="green",
-                              command=self.register.destroy)
+                        Label(self.main, text="Registration Success, please continue to Login.", fg="green").pack()
+                        Button(self.main, text="Close", bg="red", command=self.rScreen.destroy).pack()
 
                     else:
                         Label(self.rScreen, text="The passwords entered do not match.", fg="red").pack()
