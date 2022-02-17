@@ -14,9 +14,6 @@ mycursor = db.cursor()
 class gui():
 
     def login_verify(self):
-        print("Verified")
-
-    def login_verify(self):
         uVerify = self.username_login.get()  # uVerify = Username Verification
         pVerify = self.password_login.get()  # pVerify = Password Verification
 
@@ -41,11 +38,15 @@ class gui():
         if (uVerify and encoded) in mypassword_queue:
             Label(self.lScreen, text="Successful Login, your player id is {}.".format(mypassword_queue[0]),
                   fg="green").pack()
+            self.ulEntry.delete(0, END)
+            self.plEntry.delete(0, END)
         else:
             Label(self.lScreen, text="Unsuccessful Login, Please Try Again.", fg="red").pack()
+            self.plEntry.delete(0, END)
 
     def register(self):
         self.rScreen = Toplevel(self.main)
+
 
     def login(self):
         self.lScreen = Toplevel(self.main)
