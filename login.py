@@ -17,16 +17,20 @@ class gui():
         uVerify = self.username_register.get()
         pVerify = self.password_register.get()
         vpVerify = self.vpassword_register.get()
+
         if uVerify != '':
             userTest = "select * from profiles where username = '%s';" % uVerify
             information_queue = []
 
             mycursor.execute(userTest)
             myresults = mycursor.fetchall()
+
+            # Brings the info from the SQL Query and puts it into a List.
             for row in myresults:
                 for x in row:
                     information_queue.append(x)
 
+            # Make sure the Username is unique so it doesn't wipe old data, create the user if the password is the same.
             if uVerify not in information_queue:
                 if pVerify and vpVerify != '':
                     if pVerify == vpVerify:
@@ -39,13 +43,12 @@ class gui():
                                          "('%s', '%s', 0, 0);" % (uVerify, encoded)
 
                         mycursor.execute(userPassInsert)
-                        db.commit()
+                        db.commit()  # Commits new data to database, or else it won't save.
                         Label(self.main, text="Registration Success, please continue to Login.", fg="green").pack()
-                        Button(self.main, text="Close", bg="red", command=self.rScreen.destroy).pack()
+                        self.rScreen.destroy()
 
                     else:
                         Label(self.rScreen, text="The passwords entered do not match.", fg="red").pack()
-
                 else:
                     Label(self.rScreen, text="The password fields must not be empty.", fg="red").pack()
             else:
