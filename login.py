@@ -53,7 +53,6 @@ class gui():
         else:
             Label(self.rScreen, text="The username field must not be empty.", fg="red").pack()
 
-
     def login_verify(self):
         uVerify = self.username_login.get()  # uVerify = Username Verification
         pVerify = self.password_login.get()  # pVerify = Password Verification
