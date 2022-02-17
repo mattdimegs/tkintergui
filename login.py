@@ -13,6 +13,47 @@ mycursor = db.cursor()
 
 class gui():
 
+    def register_verify(self):
+        uVerify = self.username_register.get()
+        pVerify = self.password_register.get()
+        vpVerify = self.vpassword_register.get()
+        if uVerify != '':
+            userTest = "select * from profiles where username = '%s';" % uVerify
+            information_queue = []
+
+            mycursor.execute(userTest)
+            myresults = mycursor.fetchall()
+            for row in myresults:
+                for x in row:
+                    information_queue.append(x)
+
+            if uVerify not in information_queue:
+                if pVerify and vpVerify != '':
+                    if pVerify == vpVerify:
+                        ppassword = vpVerify.encode()
+                        encoded = hashlib.shake_128(ppassword).hexdigest(64)
+
+                        userPassInsert = "insert into profiles" \
+                                         "(username, password, points, level) " \
+                                         "values" \
+                                         "('%s', '%s', 0, 0);" % (uVerify, encoded)
+
+                        mycursor.execute(userPassInsert)
+                        db.commit()
+                        Label(self.main, text="Registration Success, please continue to Login.", fg="green",
+                              command=self.register.destroy)
+
+                    else:
+                        Label(self.rScreen, text="The passwords entered do not match.", fg="red").pack()
+
+                else:
+                    Label(self.rScreen, text="The password fields must not be empty.", fg="red").pack()
+            else:
+                Label(self.rScreen, text="The username is already in use, please try again.", fg="orange").pack()
+        else:
+            Label(self.rScreen, text="The username field must not be empty.", fg="red").pack()
+
+
     def login_verify(self):
         uVerify = self.username_login.get()  # uVerify = Username Verification
         pVerify = self.password_login.get()  # pVerify = Password Verification
@@ -46,7 +87,25 @@ class gui():
 
     def register(self):
         self.rScreen = Toplevel(self.main)
+        self.rScreen.title("Register")
+        self.rScreen.geometry("300x250")
+        Label(self.rScreen, text="Please create your Username and Password:").pack()
+        Label(self.rScreen, text="").pack()
 
+        self.username_register = StringVar()
+        self.password_register = StringVar()
+        self.vpassword_register = StringVar()
+
+        Label(self.rScreen, text="Username:").pack()
+        self.urEntry = Entry(self.rScreen, textvariable=self.username_register)  # urEntry = Username Register Entry
+        self.urEntry.pack()
+        Label(self.rScreen, text="Password:").pack()
+        self.prEntry = Entry(self.rScreen, textvariable=self.password_register)  # prEntry = Password Register Entry
+        self.prEntry.pack()
+        Label(self.rScreen, text="Verify Password:").pack()
+        self.vprEntry = Entry(self.rScreen, textvariable=self.vpassword_register)  # vprEntry = Verify Pwrd Reg Entry
+        self.vprEntry.pack()
+        Button(self.rScreen, text="Login", width="10", height="1", command=self.register_verify).pack()
 
     def login(self):
         self.lScreen = Toplevel(self.main)
