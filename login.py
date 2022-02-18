@@ -1,13 +1,10 @@
 import hashlib
 import mysql.connector
 from game import *
+import main
 
-db = mysql.connector.connect(
-    host="69.122.121.144",
-    user="gamedb",
-    passwd="YellowBird1873!",
-    database='game'
-)
+db = main.db
+
 mycursor = db.cursor()
 
 user_info = []
