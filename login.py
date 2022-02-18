@@ -1,6 +1,6 @@
 import hashlib
-from tkinter import *
 import mysql.connector
+from game import *
 
 db = mysql.connector.connect(
     host="69.122.121.144",
@@ -10,8 +10,16 @@ db = mysql.connector.connect(
 )
 mycursor = db.cursor()
 
+user_info = []
 
-class gui():
+
+class Gui:
+
+    def verified_login(self):
+        if self.loginVerified == "y":
+            gamePage = Game()
+        self.lScreen.destroy()
+        self.main.destroy()
 
     def register_verify(self):
         uVerify = self.username_register.get()
@@ -81,8 +89,12 @@ class gui():
         if (uVerify and encoded) in mypassword_queue:
             Label(self.lScreen, text="Successful Login, your player id is {}.".format(mypassword_queue[0]),
                   fg="green").pack()
-            self.ulEntry.delete(0, END)
-            self.plEntry.delete(0, END)
+            self.loginVerified = "y"
+            for i in mypassword_queue:
+                if i is not mypassword_queue[2]:
+                    user_info.append(i)
+            Button(self.lScreen, text="Play!", width="30", height="2", command=self.verified_login).pack()
+            print(user_info)
         else:
             Label(self.lScreen, text="Unsuccessful Login, Please Try Again.", fg="red").pack()
             self.plEntry.delete(0, END)
@@ -130,13 +142,15 @@ class gui():
     def mainScreen(self):
         self.main = Tk()
         self.main.geometry("300x250")
-        self.main.title("DB Game Main")
+        self.main.title("DB Game Main Login/Registration")
         Label(text="Matt's Login/Game", bg="grey", width="300", height="2", font=("Calibri", 13)).pack()
         Label(text="").pack()
         Button(text="Login", width="30", height="2", command=self.login).pack()
         Label(text="").pack()
         Button(text="Register", width="30", height="2", command=self.register).pack()
         Label(text="").pack()
+
+        self.loginVerified = "n"
 
         self.main.mainloop()
 
