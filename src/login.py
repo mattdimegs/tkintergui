@@ -155,3 +155,5 @@ class Gui:
         self.login()
         self.register()
         self.login_verify()
+        self.register_verify()
+        self.verified_login()
