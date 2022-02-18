@@ -1,3 +1,4 @@
+import mysql.connector
 from login import *
 from config import *
 

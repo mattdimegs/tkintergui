@@ -1,5 +1,4 @@
 import hashlib
-import mysql.connector
 from game import *
 import main
 
