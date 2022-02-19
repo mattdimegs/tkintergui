@@ -13,9 +13,9 @@ class Gui:
 
     def verified_login(self):
         if self.loginVerified == "y":
+            self.lScreen.destroy()
+            self.main.destroy()
             gamePage = Game()
-        self.lScreen.destroy()
-        self.main.destroy()
 
     def register_verify(self):
         uVerify = self.username_register.get()
@@ -90,7 +90,6 @@ class Gui:
                 if i is not mypassword_queue[2]:
                     user_info.append(i)
             Button(self.lScreen, text="Play!", width="30", height="2", command=self.verified_login).pack()
-            print(user_info)
         else:
             Label(self.lScreen, text="Unsuccessful Login, Please Try Again.", fg="red").pack()
             self.plEntry.delete(0, END)
