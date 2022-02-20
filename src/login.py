@@ -68,7 +68,7 @@ class Gui:
 
         pVerify = pVerify.encode()
         encoded = hashlib.shake_128(pVerify).hexdigest(64)
-        mypassword_queue = []
+        self.mypassword_queue = []
 
         # SQL to compare the codes later in the if statement.
         userPassCheck = "select * from profiles where username = '%s' and password = '%s'" % (uVerify, encoded)
@@ -78,21 +78,31 @@ class Gui:
             myresults = mycursor.fetchall()
             for row in myresults:
                 for x in row:
-                    mypassword_queue.append(x)
+                    self.mypassword_queue.append(x)
         else:
             print('Error Occurred')
 
-        if (uVerify and encoded) in mypassword_queue:
-            Label(self.lScreen, text="Successful Login, your player id is {}.".format(mypassword_queue[0]),
-                  fg="green").pack()
+        self.loginVerified = ""
+
+        if (uVerify and encoded) in self.mypassword_queue:
             self.loginVerified = "y"
-            for i in mypassword_queue:
-                if i is not mypassword_queue[2]:
+            self.lButton.destroy()
+            Label(self.lScreen, text="Successful Login, your player id is {}.".format(self.mypassword_queue[0]),
+                  fg="green").pack()
+            for i in self.mypassword_queue:
+                if i is not self.mypassword_queue[2]:
                     user_info.append(i)
             Button(self.lScreen, text="Play!", width="30", height="2", command=self.verified_login).pack()
         else:
-            Label(self.lScreen, text="Unsuccessful Login, Please Try Again.", fg="red").pack()
+            self.lError()
             self.plEntry.delete(0, END)
+
+    def lError(self):
+        self.leScreen = Toplevel(self.main)
+        self.leScreen.title("Login Error")
+        self.leScreen.geometry("300x50")
+        Label(self.leScreen, text="Unsuccessful Login, Please Try Again.", fg="red").pack()
+        Button(self.leScreen, text="Close", width="10", height="1", command=self.leScreen.destroy).pack()
 
     def register(self):
         self.rScreen = Toplevel(self.main)
@@ -106,13 +116,16 @@ class Gui:
         self.vpassword_register = StringVar()
 
         Label(self.rScreen, text="Username:").pack()
-        self.urEntry = Entry(self.rScreen, textvariable=self.username_register)  # urEntry = Username Register Entry
+        # urEntry = Username Register Entry
+        self.urEntry = Entry(self.rScreen, textvariable=self.username_register)
         self.urEntry.pack()
         Label(self.rScreen, text="Password:").pack()
-        self.prEntry = Entry(self.rScreen, textvariable=self.password_register)  # prEntry = Password Register Entry
+        # prEntry = Password Register Entry
+        self.prEntry = Entry(self.rScreen, textvariable=self.password_register, show='*')
         self.prEntry.pack()
         Label(self.rScreen, text="Verify Password:").pack()
-        self.vprEntry = Entry(self.rScreen, textvariable=self.vpassword_register)  # vprEntry = Verify Pwrd Reg Entry
+        # vprEntry = Verify Password Register Entry
+        self.vprEntry = Entry(self.rScreen, textvariable=self.vpassword_register, show='*')
         self.vprEntry.pack()
         Button(self.rScreen, text="Login", width="10", height="1", command=self.register_verify).pack()
 
@@ -130,9 +143,10 @@ class Gui:
         self.ulEntry = Entry(self.lScreen, textvariable=self.username_login)  # ulEntry = Username Login Entry
         self.ulEntry.pack()
         Label(self.lScreen, text="Password:").pack()
-        self.plEntry = Entry(self.lScreen, textvariable=self.password_login)  # plEntry = Password Login Entry
+        self.plEntry = Entry(self.lScreen, textvariable=self.password_login, show='*')  # plEntry = Password Login Entry
         self.plEntry.pack()
-        Button(self.lScreen, text="Login", width="10", height="1", command=self.login_verify).pack()
+        self.lButton = Button(self.lScreen, text="Login", width="10", height="1", command=self.login_verify)
+        self.lButton.pack()
 
     def mainScreen(self):
         self.main = Tk()
@@ -156,3 +170,4 @@ class Gui:
         self.login_verify()
         self.register_verify()
         self.verified_login()
+        self.lError()
