@@ -16,7 +16,7 @@ class Game:
         self.pEdit.geometry("300x250")
         self.aScreen.destroy()
         Label(self.pEdit, text="Edit Player", bg="grey", width="300", height="2", font=("Calibri", 13)).pack()
-        Label(self.pEdit, text="")
+        Label(self.pEdit, text="").pack()
         Button(self.pEdit, text="Edit a user", width="30", height="2").pack()
 
     def administrator(self):
